@@ -7,61 +7,33 @@ import java.util.Date;
 import java.util.Scanner;
 
 import model.entities.Reservation;
+import model.exceptions.GroupException;
 
 public class Program {
 
-	public static void main(String[] args) throws ParseException {
-		
-		
-		// solucao muito ruin da logica de validacao no programa principal
-		
-		Scanner sc = new Scanner(System.in);
-		
-		//formataçao da  data  na aplicaçao
-		
+	public static void main(String[] args){
+				
+		Scanner sc = new Scanner(System.in);	
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
-		//logica de ler os quartos e cdastrar entrada e saida dos clientes
+		//trecho do codigo a ser tradao colocado dentro de um bloco try
+			
+		try {
+			// Leitura dos dados
+			
+			System.out.print("Room number: ");
+			int number = sc.nextInt();
+			System.out.print("Check-In date (dd/MM/yyyy):  ");
+			Date checkIn = sdf.parse(sc.next());
+			System.out.print("Check-out date (dd/MM/yyyy):  ");
+			Date checkOut = sdf.parse(sc.next());
+			
+			//Instanciando a reserva e mostra na tela
 		
-		
-		// pede para o usuario entrar com o numero do quarto
-		// cria uma variavel pra armazenar este numero
-		
-		System.out.print("Room number: ");
-		int number = sc.nextInt();
-		
-		// pedir para entrar com a data de checkIn com a formataçao sdf
-		// checkIn recebe sdf.parser(sc.next()) em formato de texto e conver em um date
-		// gera um erro no parse entao lançamos uma auto correçao de tratamento
-		// throws parseException (por que colocou dentro do metodo uma chamada que pode causar exeçao
-		// se um outro metodo chamar esse Main trataria  tambem da mesma forma
-		
-		
-		
-		System.out.print("Check-In date (dd/MM/yyyy):  ");
-		Date checkIn = sdf.parse(sc.next());
-		
-		//Da mesma forma do checkIn sera a do checkOut
-		
-		System.out.print("Check-out date (dd/MM/yyyy):  ");
-		Date checkOut = sdf.parse(sc.next());
-		
-	
-		
-		//instanciando a reserva
-		//A data de checkOut tem que ser posterior a do checkIn
-		// Um if para testar se a data esta correta se nao mostrara a frase de erro
-		// Mostra na tela o resultado da reserva
-		
-		if ( !checkOut.after(checkIn)) {
-			System.out.println("Error in reservation: Check-Out data must be after check-In date");
-		}
-		else {
 			Reservation reservation = new Reservation(number, checkIn, checkOut);
 			System.out.println("Reservation: " + reservation);
 			
-			
-		//Atualizaçao da data da reserva
+			//Ler os dados da atualizaçao de reserva
 			
 			System.out.println();
 			System.out.println("Enter date to update the reservation:");			
@@ -70,19 +42,27 @@ public class Program {
 			System.out.print("Check-out date (dd/MM/yyyy):  ");	
 			checkOut = sdf.parse(sc.next());
 			
-		//	retornar em uma variavel error, vai mostrar se teve erro ou nao
-		//  testaremos com if
-		// melhora no programa principal delegando a logica de validacao para classe Revelation
+			//Imprimir os dados atualizados da reserva
 			
-			String error = reservation.updateDates(checkIn, checkOut);
-			if (error != null) {
-			     System.out.println("Error in reservation: " + error);
-			}
-			 else {
-			      System.out.println("Reservation: " + reservation);
-			 }
+		    reservation.updateDates(checkIn, checkOut);
+		    System.out.println("Reservation: " + reservation);
+		 }
+		
+		   // Bloco catch para tratar possiveis exception que possa acontecer no programa
+		
+        catch (ParseException e) {
+        	System.out.println("Invalid date format");
+        }
+		catch (GroupException e) {
+			System.out.println("Error in reservation: " + e.getMessage());
 		}
-				 
+		
+		//Agora qualquer outra exception inesperad  mostra uma mensagem do erro
+		
+		catch (RuntimeException e) {
+			System.out.println("Unexpected error");
+		}
+		
         sc.close();
 	}
 

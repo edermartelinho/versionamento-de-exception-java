@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import model.exceptions.GroupException;
+
 public class Reservation {
 	
 	private Integer roomNumber;
@@ -17,6 +19,12 @@ public class Reservation {
 	private static  SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	
 	public Reservation(Integer roomNumber, Date checkOut, Date checkIn) {
+		
+		//programacao defensiva exceptions no inicio do metodo
+		
+		  if ( !checkOut.after(checkIn)) {
+		    	throw new GroupException ("Check-Out data must be after check-In date");
+			}
 		this.roomNumber = roomNumber;
 		this.checkOut = checkIn;
 		this.checkIn = checkOut;
@@ -47,27 +55,29 @@ public class Reservation {
 	}
 	
 	//metodo para atualizara data
-	//O metodo nao sera mais void e sim retornar um string
+	//O metodo voltara a ser void e nao retornar um string
 	
-	public String updateDates(Date checkIn, Date checkOut) {
+	public void updateDates(Date checkIn, Date checkOut)  {
 		
 		//tratamento da data para atualizaçao nao deve ser anteriores a data atual
 		
+		//Lancaremos uma exception" GroupException" quando os argumentos do metodo sao invalido
+		
 		Date now = new Date();
 		if (checkIn.before(now) || checkOut.before(now)) {
-			return " Reservation dates for update must be future dates";
+			throw  new GroupException ("Reservation dates for update must be future dates");
 		}
 		
 		// Verificar se a data de checkOut nao e posterior a data de checkIn
 		
 	    if ( !checkOut.after(checkIn)) {
-			return "Check-Out data must be after check-In date";
+	    	throw new GroupException ("Check-Out data must be after check-In date");
 		}
 		
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		
-		return null;
+	
 	}
 
 	//implementar o toString para escrever concatenado 
