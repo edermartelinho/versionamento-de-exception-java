@@ -47,10 +47,27 @@ public class Reservation {
 	}
 	
 	//metodo para atualizara data
+	//O metodo nao sera mais void e sim retornar um string
 	
-	public void updateDates(Date checkIn, Date checkOut) {
+	public String updateDates(Date checkIn, Date checkOut) {
+		
+		//tratamento da data para atualizaçao nao deve ser anteriores a data atual
+		
+		Date now = new Date();
+		if (checkIn.before(now) || checkOut.before(now)) {
+			return " Reservation dates for update must be future dates";
+		}
+		
+		// Verificar se a data de checkOut nao e posterior a data de checkIn
+		
+	    if ( !checkOut.after(checkIn)) {
+			return "Check-Out data must be after check-In date";
+		}
+		
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
+		
+		return null;
 	}
 
 	//implementar o toString para escrever concatenado 

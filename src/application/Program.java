@@ -70,26 +70,17 @@ public class Program {
 			System.out.print("Check-out date (dd/MM/yyyy):  ");	
 			checkOut = sdf.parse(sc.next());
 			
-			//tratamento da data para atualizaçao nao deve ser anteriores a data atual
+		//	retornar em uma variavel error, vai mostrar se teve erro ou nao
+		//  testaremos com if
+		// melhora no programa principal delegando a logica de validacao para classe Revelation
 			
-			Date now = new Date();
-			if (checkIn.before(now) || checkOut.before(now)) {
-				System.out.println("Error in reservation: reservation dates for update must be future dates");
+			String error = reservation.updateDates(checkIn, checkOut);
+			if (error != null) {
+			     System.out.println("Error in reservation: " + error);
 			}
-			
-			// Verificar se a data de checkOut nao e posterior a data de checkIn
-			
-			else if ( !checkOut.after(checkIn)) {
-				System.out.println("Error in reservation: Check-Out data must be after check-In date");
-			}
-			
-			//Apos ler as novas datas atualiza
-			
-			else {
-			     reservation.updateDates(checkIn, checkOut);
-			     System.out.println("Reservation: " + reservation);
-			}
-			
+			 else {
+			      System.out.println("Reservation: " + reservation);
+			 }
 		}
 				 
         sc.close();
